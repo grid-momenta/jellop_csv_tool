@@ -2,10 +2,12 @@ import flet_core.icons
 from flet import *
 import csv
 from datetime import datetime
-from pathlib import Path
+import os
 
 
 def main(page: Page):
+    page.padding = 20
+
     csv1_location = Text("")
     csv2_location = Text("")
     result = Text("")
@@ -54,23 +56,49 @@ def main(page: Page):
                 if row[0] in list2:
                     rows.append(row)
 
-            home = str(Path.home() / "Downloads")
-            with open(f'{home}/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.csv', 'w') as c:
+            file_location = os.path.dirname(csv2_location.value)
+            dir_name = os.path.join(file_location, "FB_upload")
+            if not os.path.exists(dir_name):
+                os.makedirs(dir_name)
+
+            _, tail = os.path.split(csv2_location.value)
+
+            save_file = f"{dir_name}/FB_upload_{tail}"
+
+            with open(save_file, 'w') as c:
                 write = csv.writer(c)
                 write.writerow(headers)
                 write.writerows(rows)
 
-        result.value = f'File saved in {home}/{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.csv'
-        result.update()
+            result.value = f'File saved in {save_file}'
+            result.update()
+            return
 
     page.add(
         Column([
-            ElevatedButton("Pick CSV 1", icon=flet_core.icons.UPLOAD_FILE, on_click=lambda _: my_picker1.pick_files(allow_multiple=False)),
-            csv1_location,
-            ElevatedButton("Pick CSV 2 (ID list)", icon=flet_core.icons.UPLOAD_FILE, on_click=lambda _: my_picker2.pick_files(allow_multiple=False)),
-            csv2_location,
-            ElevatedButton("Process", on_click=process_search),
-            result,
+            Column([
+                ElevatedButton(
+                    "Pick CSV 1",
+                    icon=flet_core.icons.UPLOAD_FILE,
+                    on_click=lambda _: my_picker1.pick_files(allow_multiple=False)
+                ),
+                csv1_location,
+                ElevatedButton(
+                    "Pick CSV 2 (ID list)",
+                    icon=flet_core.icons.UPLOAD_FILE,
+                    on_click=lambda _: my_picker2.pick_files(allow_multiple=False)
+                ),
+                csv2_location,
+                ElevatedButton(
+                    "Process",
+                    on_click=process_search
+                ),
+                result,
+                Container(
+                    content=Column([Text("CG Engineering, Inc 2023")]),
+                    margin=Margin(top=300, bottom=0, left=500, right=0)
+                ),
+            ], expand=True),
         ])
     )
 
