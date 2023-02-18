@@ -51,10 +51,14 @@ def main(page: Page):
             headers = []
             rows = []
 
+            one_d_dict = {}
+            for value in list2:
+                one_d_dict[value] = True
+
             for idx, row in enumerate(csv_file):
                 if idx == 0:
                     headers = row
-                if row[0] in list2:
+                if row[0] in one_d_dict:
                     rows.append(row)
 
             file_location = os.path.dirname(csv2_location.value)
