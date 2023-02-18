@@ -45,10 +45,12 @@ def main(page: Page):
 
         with open(csv1_location.value, encoding='utf-8') as f:
             csv_file = csv.reader(f, delimiter=",")
-            headers = next(csv_file)
+            headers = []
             rows = []
 
-            for row in csv_file:
+            for idx, row in enumerate(csv_file):
+                if idx == 0:
+                    headers = row
                 if row[0] in list2:
                     rows.append(row)
 
@@ -65,7 +67,7 @@ def main(page: Page):
         Column([
             ElevatedButton("Pick CSV 1", icon=flet_core.icons.UPLOAD_FILE, on_click=lambda _: my_picker1.pick_files(allow_multiple=False)),
             csv1_location,
-            ElevatedButton("Pick CSV 2", icon=flet_core.icons.UPLOAD_FILE, on_click=lambda _: my_picker2.pick_files(allow_multiple=False)),
+            ElevatedButton("Pick CSV 2 (ID list)", icon=flet_core.icons.UPLOAD_FILE, on_click=lambda _: my_picker2.pick_files(allow_multiple=False)),
             csv2_location,
             ElevatedButton("Process", on_click=process_search),
             result,
