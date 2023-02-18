@@ -31,7 +31,7 @@ flet run main.py -d
 
 The UI will be appeared:
 
-![img.png](img.png)
+![img_2.png](img.png)
 
 ## Creating desktop app
 
