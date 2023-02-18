@@ -7,6 +7,7 @@ import os
 
 def main(page: Page):
     page.padding = 20
+    page.title = "Jellop CSV Tool"
 
     csv1_location = Text("")
     csv2_location = Text("")
