@@ -41,23 +41,22 @@ def main(page: Page):
             return
 
         list2 = []
-        with open(csv2_location.value, encoding='utf-8') as f:
+        with open(csv2_location.value, encoding="ISO-8859-1") as f:
             for idx, row in enumerate(f):
                 if idx != 0:
                     list2.append(row.split()[0])
 
-        with open(csv1_location.value, encoding='utf-8') as f:
+        with open(csv1_location.value, encoding="ISO-8859-1") as f:
             csv_file = csv.reader(f, delimiter=",")
-            headers = []
+            headers = next(csv_file)
             rows = []
+
 
             one_d_dict = {}
             for value in list2:
                 one_d_dict[value] = True
 
-            for idx, row in enumerate(csv_file):
-                if idx == 0:
-                    headers = row
+            for row in csv_file:
                 if row[0] in one_d_dict:
                     rows.append(row)
 
@@ -70,7 +69,7 @@ def main(page: Page):
 
             save_file = f"{dir_name}/FB_upload_{tail}"
 
-            with open(save_file, 'w') as c:
+            with open(save_file, 'w',newline='',encoding='utf-8') as c:
                 write = csv.writer(c)
                 write.writerow(headers)
                 write.writerows(rows)
