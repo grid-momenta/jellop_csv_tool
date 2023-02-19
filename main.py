@@ -14,11 +14,15 @@ def main(page: Page):
     result = Text("")
 
     def picker1_dialogue(e: FilePickerResultEvent):
+        print("CSV 1")
+        print(e.files)
         if e.files and len(e.files):
             csv1_location.value = e.files[0].path
             csv1_location.update()
 
     def picker2_dialogue(e: FilePickerResultEvent):
+        print("CSV 2")
+        print(e.files)
         if e.files and len(e.files):
             csv2_location.value = e.files[0].path
             csv2_location.update()
