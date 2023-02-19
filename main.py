@@ -73,7 +73,7 @@ def main(page: Page):
 
             save_file = f"{dir_name}/FB_upload_{tail}"
 
-            with open(save_file, 'w', newline='') as c:
+            with open(save_file, 'w', newline='', encoding='utf-8') as c:
                 write = csv.writer(c)
                 write.writerow(headers)
                 write.writerows(rows)
