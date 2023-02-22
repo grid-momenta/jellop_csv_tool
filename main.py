@@ -14,15 +14,11 @@ def main(page: Page):
     result = Text("")
 
     def picker1_dialogue(e: FilePickerResultEvent):
-        print("CSV 1")
-        print(e.files)
         if e.files and len(e.files):
             csv1_location.value = e.files[0].path
             csv1_location.update()
 
     def picker2_dialogue(e: FilePickerResultEvent):
-        print("CSV 2")
-        print(e.files)
         if e.files and len(e.files):
             csv2_location.value = e.files[0].path
             csv2_location.update()
@@ -52,9 +48,7 @@ def main(page: Page):
 
         with open(csv1_location.value, encoding="ISO-8859-1") as f:
             csv_file = csv.reader(f, delimiter=",")
-            headers = next(csv_file)
             rows = []
-
 
             one_d_dict = {}
             for value in list2:
@@ -62,7 +56,8 @@ def main(page: Page):
 
             for row in csv_file:
                 if row[0] in one_d_dict:
-                    rows.append(row)
+                    names = row[5].split(" ")
+                    rows.append([row[1], row[2], row[3], row[4], names[0], names[1]])
 
             file_location = os.path.dirname(csv2_location.value)
             dir_name = os.path.join(file_location, "FB_upload")
@@ -75,7 +70,7 @@ def main(page: Page):
 
             with open(save_file, 'w', newline='', encoding='utf-8') as c:
                 write = csv.writer(c)
-                write.writerow(headers)
+                write.writerow(["email", "country", "st", "ct", "fn", "ln"])
                 write.writerows(rows)
 
             result.value = f'File saved in {save_file}'
