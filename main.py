@@ -57,7 +57,9 @@ def main(page: Page):
             for row in csv_file:
                 if row[0] in one_d_dict:
                     names = row[5].split(" ")
-                    rows.append([row[1], row[2], row[3], row[4], names[0], names[1]])
+                    fn = names[0] if len(names) else ""
+                    ln = names[1] if len(names) > 1 else ""
+                    rows.append([row[1], row[2], row[3], row[4], fn, ln])
 
             file_location = os.path.dirname(csv2_location.value)
             dir_name = os.path.join(file_location, "FB_upload")
