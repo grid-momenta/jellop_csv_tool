@@ -37,6 +37,8 @@ The UI will be appeared:
 
 ```shell
 flet pack main.py
+
+flet pack main.py --product-name "Jellop CSV Tool" --product-version "0.0.1" --copyright "Copyright @ Jellop 2023" --bundle-id "com.jellop.csv_tool"
 ```
 
 For more details check [flet.dev docs](https://flet.dev/docs/guides/python/packaging-desktop-app)
