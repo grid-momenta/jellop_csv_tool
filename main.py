@@ -20,7 +20,11 @@ def main(page: Page):
 
     def picker2_dialogue(e: FilePickerResultEvent):
         if e.files and len(e.files):
-            csv2_location.value = e.files[0].path
+            file_paths = ["CSV file list for filtering:"]
+            for idx, file in enumerate(e.files):
+                file_paths.append(file.path)
+
+            csv2_location.value = "\n".join(file_paths)
             csv2_location.update()
 
     my_picker1 = FilePicker(on_result=picker1_dialogue)
@@ -40,44 +44,50 @@ def main(page: Page):
             result.update()
             return
 
-        list2 = []
-        with open(csv2_location.value, encoding="ISO-8859-1") as f:
-            for idx, row in enumerate(f):
-                if idx != 0:
-                    list2.append(row.split()[0])
+        list2 = ["File saved in:"]
+        file_paths = csv2_location.value.split("\n")
+        for file_path in file_paths[1:]:
+            with open(file_path, encoding="ISO-8859-1") as f:
+                list1 = []
+                for idx, row in enumerate(f):
+                    if idx != 0:
+                        list1.append(row.split()[0])
+                # list2.append({file_path: list1})
 
-        with open(csv1_location.value, encoding="ISO-8859-1") as f:
-            csv_file = csv.reader(f, delimiter=",")
-            rows = []
+                with open(csv1_location.value, encoding="ISO-8859-1") as f:
+                    csv_file = csv.reader(f, delimiter=",")
+                    rows = []
 
-            one_d_dict = {}
-            for value in list2:
-                one_d_dict[value] = True
+                    one_d_dict = {}
+                    for value in list1:
+                        one_d_dict[value] = True
 
-            for row in csv_file:
-                if row[0] in one_d_dict:
-                    names = row[5].split(" ")
-                    fn = names[0] if len(names) else ""
-                    ln = names[1] if len(names) > 1 else ""
-                    rows.append([row[1], row[2], row[3], row[4], fn, ln])
+                    for row in csv_file:
+                        if row[0] in one_d_dict:
+                            names = row[5].split(" ")
+                            fn = names[0] if len(names) else ""
+                            ln = names[1] if len(names) > 1 else ""
+                            rows.append([row[1], row[2], row[3], row[4], fn, ln])
 
-            file_location = os.path.dirname(csv2_location.value)
-            dir_name = os.path.join(file_location, "FB_upload")
-            if not os.path.exists(dir_name):
-                os.makedirs(dir_name)
+                    file_location = os.path.dirname(file_path)
+                    dir_name = os.path.join(file_location, "FB_upload")
+                    if not os.path.exists(dir_name):
+                        os.makedirs(dir_name)
 
-            _, tail = os.path.split(csv2_location.value)
+                    _, tail = os.path.split(file_path)
 
-            save_file = f"{dir_name}/FB_upload_{tail}"
+                    save_file = f"{dir_name}/FB_upload_{tail}"
 
-            with open(save_file, 'w', newline='', encoding='utf-8') as c:
-                write = csv.writer(c)
-                write.writerow(["email", "country", "st", "ct", "fn", "ln"])
-                write.writerows(rows)
+                    with open(save_file, 'w', newline='', encoding='utf-8') as c:
+                        write = csv.writer(c)
+                        write.writerow(["email", "country", "st", "ct", "fn", "ln"])
+                        write.writerows(rows)
 
-            result.value = f'File saved in {save_file}'
-            result.update()
-            return
+                    list2.append(save_file)
+
+        result.value = "\n".join(list2)
+        result.update()
+        return
 
     page.add(
         Column([
@@ -91,7 +101,7 @@ def main(page: Page):
                 ElevatedButton(
                     "Pick CSV 2 (ID list)",
                     icon=flet_core.icons.UPLOAD_FILE,
-                    on_click=lambda _: my_picker2.pick_files(allow_multiple=False)
+                    on_click=lambda _: my_picker2.pick_files(allow_multiple=True)
                 ),
                 csv2_location,
                 ElevatedButton(
