@@ -53,7 +53,9 @@ def main(page: Page):
 
         list2 = []
         file_paths = csv2_location.value.split("\n")
-        for file_path in file_paths:
+        fraction = 1 / len(file_paths)
+        print(f"fraction: {fraction}")
+        for idy, file_path in enumerate(file_paths):
             with open(file_path, encoding="ISO-8859-1") as f:
                 list1 = []
                 for idx, row in enumerate(f):
@@ -91,8 +93,9 @@ def main(page: Page):
 
                     list2.append(save_file)
 
-        pb.value = 1
-        pb.update()
+            pb.value = fraction * (idy + 1)
+            pb.update()
+
         results.controls.append(
             Text("> File Saved in:\n   " + "\n   ".join(list2), style=TextThemeStyle.BODY_MEDIUM))
         results.update()
