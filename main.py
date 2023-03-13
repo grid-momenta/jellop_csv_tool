@@ -18,7 +18,7 @@ def main(page: Page):
             csv1_location.value = e.files[0].path
             csv1_location.update()
 
-            results.controls.append(Text(f"> CSV 1 picked.\n   {e.files[0].path}", style=TextThemeStyle.BODY_MEDIUM))
+            results.controls.append(Text(f"> PII database picked.", style=TextThemeStyle.BODY_MEDIUM))
             results.update()
 
     def picker2_dialogue(e: FilePickerResultEvent):
@@ -30,7 +30,7 @@ def main(page: Page):
             csv2_location.value = "\n".join(file_paths)
             csv2_location.update()
 
-            results.controls.append(Text(f"> CSV 2 picked.\n   " + "\n   ".join(file_paths), style=TextThemeStyle.BODY_MEDIUM))
+            results.controls.append(Text(f"> {len(e.files)} files selected", style=TextThemeStyle.BODY_MEDIUM))
             results.update()
 
     my_picker1 = FilePicker(on_result=picker1_dialogue)
@@ -54,7 +54,7 @@ def main(page: Page):
         list2 = []
         file_paths = csv2_location.value.split("\n")
         fraction = 1 / len(file_paths)
-        print(f"fraction: {fraction}")
+
         for idy, file_path in enumerate(file_paths):
             with open(file_path, encoding="ISO-8859-1") as f:
                 list1 = []
@@ -97,14 +97,14 @@ def main(page: Page):
             pb.update()
 
         results.controls.append(
-            Text("> File Saved in:\n   " + "\n   ".join(list2), style=TextThemeStyle.BODY_MEDIUM))
+            Text(f"> {len(list2)} file(s) saved in:\n   " + "\n   ".join(list2), style=TextThemeStyle.BODY_MEDIUM))
         results.update()
         return
 
-    pb = ProgressBar(width=800, color="amber", bgcolor="#eeeeee", opacity=0)
+    pb = ProgressBar(width=800, color="blue", bgcolor="#eeeeee", opacity=0)
 
     results = Column([
-        Text("> Pick CSV 1 and CSV 2. Then click Process.", style=TextThemeStyle.BODY_LARGE)
+        Text("> Pick CSV files properly. Then click Process.", style=TextThemeStyle.BODY_LARGE)
     ])
 
     page.add(
@@ -123,12 +123,12 @@ def main(page: Page):
                             Row(
                                 [
                                     ElevatedButton(
-                                        "Pick CSV 1",
+                                        "Pick PII Database",
                                         icon=flet_core.icons.UPLOAD_FILE,
                                         on_click=lambda _: my_picker1.pick_files(allow_multiple=False)
                                     ),
                                     ElevatedButton(
-                                        "Pick CSV 2 (ID list)",
+                                        "Pick Hashed IDs",
                                         icon=flet_core.icons.UPLOAD_FILE,
                                         on_click=lambda _: my_picker2.pick_files(allow_multiple=True)
                                     ),
